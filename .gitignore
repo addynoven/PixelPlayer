@@ -49,3 +49,5 @@ markdown.xml
 **/.env
 **/.env.*
 !**/.env.example
+
+sdk/

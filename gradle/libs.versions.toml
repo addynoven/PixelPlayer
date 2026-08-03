@@ -3,6 +3,7 @@ accompanistDrawablepainter = "0.37.3"
 aboutLibraries = "15.0.3"
 agp = "9.2.1"
 app = "1.7.0"
+
 googleGenai = "1.58.0"
 googlePlayServicesCast = "22.3.1"
 animation = "1.11.3"
@@ -104,6 +105,8 @@ benchmarkMacroJunit4 = "1.4.1"
 baselineprofile = "1.5.0-alpha06"
 profileinstaller = "1.4.1"
 pagingCommon = "3.3.6"
+newpipeExtractor = "v0.24.8"
+
 
 # Wear OS
 horologist = "0.7.15"
@@ -272,6 +275,8 @@ commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "co
 jdom2 = { module = "org.jdom:jdom2", version.ref = "jdom2" }
 jose4j = { module = "org.bitbucket.b_c:jose4j", version.ref = "jose4j" }
 apache-httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "httpclient" }
+newpipe-extractor = { module = "com.github.TeamNewPipe:NewPipeExtractor", version.ref = "newpipeExtractor" }
+
 
 
 [plugins]

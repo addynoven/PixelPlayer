@@ -1,6 +1,7 @@
 package com.theveloper.pixelplay.presentation.components
 
 import android.content.Context
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -24,7 +26,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.appcompat.content.res.AppCompatResources
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -113,13 +118,13 @@ fun PlayStoreAnnouncementDialog(
                         shape = CircleShape,
                         color = MaterialTheme.colorScheme.primaryContainer,
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.pixelplay_base_monochrome),
+                        val appIcon = AppCompatResources.getDrawable(LocalContext.current, R.mipmap.ic_launcher_round)
+                        Image(
+                            painter = rememberDrawablePainter(appIcon),
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier
-                                .padding(10.dp)
-                                .size(26.dp),
+                                .size(46.dp)
+                                .clip(CircleShape),
                         )
                     }
 

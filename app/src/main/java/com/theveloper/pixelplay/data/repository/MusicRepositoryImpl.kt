@@ -99,8 +99,10 @@ class MusicRepositoryImpl @Inject constructor(
     private val songRepository: SongRepository,
     private val favoritesDao: FavoritesDao,
     private val artistImageRepository: ArtistImageRepository,
-    private val folderTreeBuilder: FolderTreeBuilder
+    private val folderTreeBuilder: FolderTreeBuilder,
+    private val youtubeRepositoryProvider: Lazy<com.theveloper.pixelplay.data.youtube.YouTubeMusicRepository>
 ) : MusicRepository {
+
 
     companion object {
         /** Maximum number of search results to load at once to avoid memory issues with large libraries. */
@@ -564,7 +566,11 @@ class MusicRepositoryImpl @Inject constructor(
 
     override fun searchSongs(query: String, titleOnly: Boolean): Flow<List<Song>> {
         if (query.isBlank()) return flowOf(emptyList())
-        return combine(
+        val youtubeFlow = flow {
+            val onlineResults = runCatching { youtubeRepositoryProvider.get().searchSongs(query) }.getOrDefault(emptyList())
+            emit(onlineResults)
+        }
+        val localFlow = combine(
             userPreferencesRepository.allowedDirectoriesFlow,
             userPreferencesRepository.blockedDirectoriesFlow
         ) { allowedDirs, blockedDirs ->
@@ -585,8 +591,15 @@ class MusicRepositoryImpl @Inject constructor(
             }.flatMapLatest { it }
         }.map { entities ->
             entities.map { it.toSong() }
+        }
+
+        return combine(localFlow, youtubeFlow) { local, youtube ->
+            val localIds = local.map { it.id }.toSet()
+            val filteredYoutube = youtube.filterNot { it.id in localIds }
+            local + filteredYoutube
         }.flowOn(Dispatchers.IO)
     }
+
 
 
     override fun searchAlbums(query: String, minTracks: Int): Flow<List<Album>> {

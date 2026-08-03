@@ -1156,10 +1156,12 @@ class LyricsRepositoryImpl @Inject constructor(
      * Load embedded lyrics from audio file metadata
      */
     private suspend fun loadEmbeddedLyricsFromMetadata(song: Song): Lyrics? = withContext(Dispatchers.IO) {
-        // Skip embedded lyrics for Telegram songs (not supported yet/streamed)
-        if (song.contentUriString.startsWith("telegram://") || song.contentUriString.isEmpty()) {
+        // Skip embedded lyrics for cloud/remote songs (not local file streams)
+        val scheme = song.contentUriString.substringBefore("://")
+        if (scheme in setOf("youtube", "telegram", "netease", "qqmusic", "gdrive", "navidrome", "jellyfin") || song.contentUriString.isEmpty()) {
             return@withContext null
         }
+
 
         // Then try to read from file metadata
         return@withContext try {
@@ -1669,6 +1671,10 @@ class LyricsRepositoryImpl @Inject constructor(
     private fun generateCacheKey(songId: String): String = songId
 
     private fun createTempFileFromUri(uri: Uri): File? {
+        val scheme = uri.scheme
+        if (scheme != null && scheme in setOf("youtube", "telegram", "netease", "qqmusic", "gdrive", "navidrome", "jellyfin")) {
+            return null
+        }
         return try {
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 val fileName = context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
@@ -1684,11 +1690,15 @@ class LyricsRepositoryImpl @Inject constructor(
                 }
                 tempFile
             }
+        } catch (e: java.io.FileNotFoundException) {
+            LogUtils.d(this, "File not found for URI $uri")
+            null
         } catch (e: Exception) {
             LogUtils.e(this, e, "Error creating temp file from URI")
             null
         }
     }
+
 
     private fun cleanTitleSmart(title: String): String {
         // 1. Remove leading digits/spaces/dots/hyphens (e.g., "01 ", "01. ", "01 - ")

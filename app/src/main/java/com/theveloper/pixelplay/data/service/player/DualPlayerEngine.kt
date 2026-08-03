@@ -220,6 +220,7 @@ class DualPlayerEngine @Inject constructor(
     private val navidromeStreamProxy: NavidromeStreamProxy,
     private val jellyfinStreamProxy: com.theveloper.pixelplay.data.jellyfin.JellyfinStreamProxy,
     private val gdriveStreamProxy: com.theveloper.pixelplay.data.gdrive.GDriveStreamProxy,
+    private val youtubeStreamProxy: com.theveloper.pixelplay.data.youtube.YouTubeStreamProxy,
     private val telegramCacheManager: com.theveloper.pixelplay.data.telegram.TelegramCacheManager,
     private val connectivityStateHolder: com.theveloper.pixelplay.presentation.viewmodel.ConnectivityStateHolder
 ) {
@@ -234,11 +235,12 @@ class DualPlayerEngine @Inject constructor(
         private const val POST_TRANSITION_OFFLOAD_GUARD_MS = 2_000L
         private const val MAX_AUXILIARY_TIMELINE_ITEMS = 200
         private val LOCAL_MEDIA_SCHEMES = setOf("content", "file", "android.resource")
-        private val REMOTE_MEDIA_SCHEMES = setOf("http", "https", "telegram", "netease", "qqmusic", "navidrome", "jellyfin", "gdrive")
+        private val REMOTE_MEDIA_SCHEMES = setOf("http", "https", "telegram", "netease", "qqmusic", "navidrome", "jellyfin", "gdrive", "youtube")
         // Subset of REMOTE_MEDIA_SCHEMES: schemes that need proxy resolution.
         // http/https resolve directly and must NOT enter the resolvedUriCache lookup path.
-        private val CLOUD_PROXY_SCHEMES = setOf("telegram", "netease", "qqmusic", "navidrome", "jellyfin", "gdrive")
+        private val CLOUD_PROXY_SCHEMES = setOf("telegram", "netease", "qqmusic", "navidrome", "jellyfin", "gdrive", "youtube")
     }
+
 
     data class TransitionTarget(
         val mediaItem: MediaItem,
@@ -1098,19 +1100,43 @@ class DualPlayerEngine @Inject constructor(
             
         val resolver = object : ResolvingDataSource.Resolver {
             override fun resolveDataSpec(dataSpec: DataSpec): DataSpec {
-                val uri = dataSpec.uri
+                var uri = dataSpec.uri
+                if (uri.host == "127.0.0.1" || uri.host == "localhost") {
+                    val path = uri.path ?: ""
+                    val segments = path.trim('/').split('/')
+                    if (segments.size >= 2) {
+                        val proxyScheme = segments[0]
+                        val proxyId = segments.subList(1, segments.size).joinToString("/")
+                        if (proxyScheme in CLOUD_PROXY_SCHEMES && proxyId.isNotBlank()) {
+                            uri = Uri.parse("$proxyScheme://$proxyId")
+                            android.util.Log.d("YouTubePlayback", "Re-routed stale proxy URI ${dataSpec.uri} -> $uri")
+                        }
+                    }
+                }
                 val scheme = uri.scheme
                 if (scheme in CLOUD_PROXY_SCHEMES) {
                     val originalUri = uri.toString()
                     val resolved = resolvedUriCache.get(originalUri)
                     if (resolved != null) {
+                        android.util.Log.d("YouTubePlayback", "=== STEP 2 (CACHE HIT): resolveDataSpec for $originalUri -> $resolved ===")
                         return dataSpec.buildUpon().setUri(resolved).build()
                     }
-                    Timber.tag("DualPlayerEngine").d("resolveDataSpec: Cache MISS for %s — using original URI", scheme)
+                    android.util.Log.d("YouTubePlayback", "=== STEP 2 (CACHE MISS): resolveDataSpec resolving $originalUri synchronously ===")
+                    val blockingResolved = kotlinx.coroutines.runBlocking {
+                        resolveCloudUri(uri)
+                    }
+                    if (blockingResolved != uri) {
+                        android.util.Log.d("YouTubePlayback", "=== STEP 2 (RESOLVED): resolveDataSpec mapped $originalUri -> $blockingResolved ===")
+                        return dataSpec.buildUpon().setUri(blockingResolved).build()
+                    }
+                    // Resolution failed — cloud URI can't be played directly.
+                    android.util.Log.e("YouTubePlayback", "=== STEP 2 (ERROR): Failed to resolve $scheme URI for $uri ===")
+                    throw java.io.IOException("Failed to resolve $scheme stream URI for $uri — proxy unavailable or extraction failed")
                 }
-                return dataSpec
+                return dataSpec.buildUpon().setUri(uri).build()
             }
         }
+
         
         val dataSourceFactory = DefaultDataSource.Factory(context)
         val resolvingFactory = ResolvingDataSource.Factory(dataSourceFactory, resolver)
@@ -1204,6 +1230,7 @@ class DualPlayerEngine @Inject constructor(
             "navidrome" -> resolveNavidromeUriAsync(uriString)
             "jellyfin" -> resolveJellyfinUriAsync(uriString)
             "gdrive" -> resolveGDriveUriAsync(uriString)
+            "youtube" -> resolveYouTubeUriAsync(uriString)
             else -> null
         }
 
@@ -1213,6 +1240,7 @@ class DualPlayerEngine @Inject constructor(
         }
         uri
     }
+
 
     private suspend fun resolveTelegramUriAsync(uri: Uri, uriString: String): Uri? = withContext(Dispatchers.IO) {
         val pathSegments = uri.pathSegments
@@ -1261,13 +1289,40 @@ class DualPlayerEngine @Inject constructor(
     }
 
     private suspend fun resolveGDriveUriAsync(uriString: String): Uri? = withContext(Dispatchers.IO) {
-        if (!connectivityStateHolder.isOnline.value) {
+        if (!connectivityStateHolder.isOnline.value && !connectivityStateHolder.checkIsOnlineNow()) {
             connectivityStateHolder.triggerOfflineBlockedEvent()
             return@withContext null
         }
         if (!gdriveStreamProxy.ensureReady(5_000L)) return@withContext null
         gdriveStreamProxy.resolveGDriveUri(uriString)?.toUri()
     }
+
+    private suspend fun resolveYouTubeUriAsync(uriString: String): Uri? = withContext(Dispatchers.IO) {
+        android.util.Log.d("YouTubePlayback", "resolveYouTubeUriAsync starting for: $uriString")
+        if (!connectivityStateHolder.isOnline.value && !connectivityStateHolder.checkIsOnlineNow()) {
+            android.util.Log.w("YouTubePlayback", "resolveYouTubeUri: device is offline")
+            connectivityStateHolder.triggerOfflineBlockedEvent()
+            return@withContext null
+        }
+        if (!youtubeStreamProxy.ensureReady(5_000L)) {
+            android.util.Log.w("YouTubePlayback", "resolveYouTubeUri: YouTube proxy failed to become ready within 5s")
+            return@withContext null
+        }
+        try {
+            android.util.Log.d("YouTubePlayback", "Warming up YouTube stream URL for: $uriString")
+            youtubeStreamProxy.warmUpStreamUrl(uriString)
+        } catch (e: Exception) {
+            android.util.Log.e("YouTubePlayback", "resolveYouTubeUri: warmUp failed for $uriString", e)
+        }
+        val proxyUrl = youtubeStreamProxy.resolveYouTubeUri(uriString)
+        if (proxyUrl == null) {
+            android.util.Log.w("YouTubePlayback", "resolveYouTubeUri: youtubeStreamProxy.resolveYouTubeUri returned null for $uriString")
+        } else {
+            android.util.Log.d("YouTubePlayback", "resolveYouTubeUri: proxy URL generated -> $proxyUrl")
+        }
+        proxyUrl?.toUri()
+    }
+
 
     suspend fun resolveMediaItem(mediaItem: MediaItem): MediaItem {
         val uri = mediaItem.localConfiguration?.uri ?: return mediaItem

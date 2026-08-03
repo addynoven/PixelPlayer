@@ -7,6 +7,7 @@ import android.net.Uri
 import com.theveloper.pixelplay.data.model.Lyrics
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -86,6 +87,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.appcompat.content.res.AppCompatResources
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -2258,11 +2261,13 @@ private fun AlbumPlaceholder(
         tonalElevation = 0.dp
     ) {
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-            Icon(
-                modifier = Modifier.size(86.dp),
-                painter = painterResource(R.drawable.pixelplay_base_monochrome),
+            val appIcon = AppCompatResources.getDrawable(LocalContext.current, R.mipmap.ic_launcher_round)
+            Image(
+                modifier = Modifier
+                    .size(86.dp)
+                    .clip(CircleShape),
+                painter = rememberDrawablePainter(appIcon),
                 contentDescription = null,
-                tint = onColor
             )
         }
     }

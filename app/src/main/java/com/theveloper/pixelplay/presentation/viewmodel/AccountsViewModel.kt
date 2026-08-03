@@ -28,7 +28,8 @@ enum class ExternalServiceAccount {
     NETEASE,
     QQ_MUSIC,
     NAVIDROME,
-    JELLYFIN
+    JELLYFIN,
+    YOUTUBE
 }
 
 data class ExternalAccountUiModel(
@@ -52,8 +53,10 @@ class AccountsViewModel @Inject constructor(
     private val neteaseRepository: NeteaseRepository,
     private val qqMusicRepository: QqMusicRepository,
     private val navidromeRepository: NavidromeRepository,
-    private val jellyfinRepository: JellyfinRepository
+    private val jellyfinRepository: JellyfinRepository,
+    private val youtubeRepository: com.theveloper.pixelplay.data.youtube.YouTubeMusicRepository
 ) : ViewModel() {
+
 
     private val loggingOutServices = MutableStateFlow<Set<ExternalServiceAccount>>(emptySet())
 
@@ -224,7 +227,19 @@ class AccountsViewModel @Inject constructor(
                     )
                 )
             }
+            if (youtubeRepository.isInitialized.value) {
+                add(
+                    ExternalAccountUiModel(
+                        service = ExternalServiceAccount.YOUTUBE,
+                        title = "YouTube Music",
+                        accountLabel = "YouTube Music Source Active",
+                        syncedContentLabel = "Online search & streaming enabled",
+                        isLoggingOut = ExternalServiceAccount.YOUTUBE in activeLogouts
+                    )
+                )
+            }
         }
+
 
         val disconnectedServices = buildList {
             if (!telegramConnected) add(ExternalServiceAccount.TELEGRAM)
@@ -259,6 +274,7 @@ class AccountsViewModel @Inject constructor(
                         ExternalServiceAccount.QQ_MUSIC -> qqMusicRepository.logout()
                         ExternalServiceAccount.NAVIDROME -> navidromeRepository.logout()
                         ExternalServiceAccount.JELLYFIN -> jellyfinRepository.logout()
+                        ExternalServiceAccount.YOUTUBE -> { /* YouTube doesn't need logout as it's just an online source */ }
                     }
                 }
             } finally {

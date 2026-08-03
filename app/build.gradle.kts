@@ -91,7 +91,8 @@ android {
                 "/META-INF/io.netty.versions.properties",
                 "META-INF/CONTRIBUTORS.md",
                 "META-INF/NOTICE.txt",
-                "META-INF/NOTICE.md"
+                "META-INF/NOTICE.md",
+                "**/*.proto"
             )
             pickFirsts += listOf(
                 "META-INF/LICENSE.md",
@@ -104,10 +105,11 @@ android {
         applicationId = "com.theveloper.pixelplay"
         minSdk = 30
         targetSdk = 37
-        versionCode = (project.findProperty("APP_VERSION_CODE") as? String)?.toInt() ?: 1
-        versionName = (project.findProperty("APP_VERSION_NAME") as? String) ?: "1.0.0"
+        versionCode = (project.findProperty("APP_VERSION_CODE") as? String)?.toInt() ?: 2
+        versionName = (project.findProperty("APP_VERSION_NAME") as? String) ?: "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        resConfigs("en", "ar", "de", "es", "fr", "in", "it", "ko", "nb", "ru", "tr", "zh-rCN")
 
         val telegramApiId = localProperties.getProperty("TELEGRAM_API_ID")?.ifEmpty { null }
             ?: "2040"
@@ -240,7 +242,9 @@ dependencies {
     // Core & Optimization
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.profileinstaller)
+    implementation(libs.newpipe.extractor)
     "baselineProfile"(project(":baselineprofile"))
+
 
     // AndroidX & Compose
     implementation(libs.androidx.core.ktx)

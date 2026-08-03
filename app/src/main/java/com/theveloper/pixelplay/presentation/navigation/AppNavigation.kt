@@ -235,8 +235,12 @@ fun AppNavigation(
                         },
                         onOpenJellyfinDashboard = {
                             navController.navigateSafely(Screen.JellyfinDashboard.route)
+                        },
+                        onOpenYouTubeDashboard = {
+                            navController.navigateSafely(Screen.YouTubeDashboard.route)
                         }
                     )
+
                 }
             }
             composable(
@@ -501,6 +505,17 @@ fun AppNavigation(
                 ScreenWrapper(navController = navController, playerViewModel = playerViewModel, animatedVisibilityScope = this) {
                     com.theveloper.pixelplay.presentation.jellyfin.dashboard.JellyfinDashboardScreen(
                         onBack = { navController.popBackStack() }
+                    )
+                }
+            }
+
+            composable(
+                Screen.YouTubeDashboard.route,
+            ) {
+                ScreenWrapper(navController = navController, playerViewModel = playerViewModel, animatedVisibilityScope = this) {
+                    com.theveloper.pixelplay.presentation.youtube.dashboard.YouTubeDashboardScreen(
+                        onBackClick = { navController.popBackStack() },
+                        playerViewModel = playerViewModel
                     )
                 }
             }

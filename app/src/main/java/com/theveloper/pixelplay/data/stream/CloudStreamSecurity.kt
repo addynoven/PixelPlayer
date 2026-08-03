@@ -19,6 +19,7 @@ object CloudStreamSecurity {
     private val QQMUSIC_SONG_MID_REGEX = Regex("^[A-Za-z0-9_-]{6,50}$")
     private val NAVIDROME_SONG_ID_REGEX = Regex("^[A-Za-z0-9_-]{1,100}$")
     private val JELLYFIN_ITEM_ID_REGEX = Regex("^[A-Za-z0-9]{1,100}$")
+    private val YOUTUBE_VIDEO_ID_REGEX = Regex("^[A-Za-z0-9_-]{11}$")
     private val FORBIDDEN_HOSTS = setOf("localhost", "127.0.0.1", "0.0.0.0", "::1", "[::1]")
 
     // DNS suffixes that only resolve on a local network: mDNS (.local), common
@@ -29,7 +30,11 @@ object CloudStreamSecurity {
         "application/octet-stream",
         "binary/octet-stream",
         "application/mp4",
-        "video/mp4"
+        "video/mp4",
+        "video/webm",
+        "application/ogg",
+        "audio/webm",
+        "audio/mp4"
     )
 
     data class RangeHeaderValidation(
@@ -51,6 +56,9 @@ object CloudStreamSecurity {
     fun validateNavidromeSongId(songId: String): Boolean = NAVIDROME_SONG_ID_REGEX.matches(songId)
 
     fun validateJellyfinItemId(itemId: String): Boolean = JELLYFIN_ITEM_ID_REGEX.matches(itemId)
+
+    fun validateYouTubeVideoId(videoId: String): Boolean = YOUTUBE_VIDEO_ID_REGEX.matches(videoId)
+
 
     fun validateRangeHeader(rawHeader: String?): RangeHeaderValidation {
         if (rawHeader.isNullOrBlank()) {

@@ -187,6 +187,9 @@
 # Glance Widget
 -keep class * extends androidx.glance.appwidget.action.ActionCallback { <init>(); }
 
+# Java Beans (Rhino/Mozilla JavaScript)
+-dontwarn java.beans.**
+
 # =============================================================================
 # TIMBER LOGGING OPTIMIZATION FOR RELEASE BUILDS
 # =============================================================================

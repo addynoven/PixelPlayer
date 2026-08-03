@@ -65,6 +65,9 @@ abstract class CloudStreamProxy<K : Any>(
     /** Resolve the actual streaming URL for the given song ID */
     protected abstract suspend fun resolveStreamUrl(id: K): String?
 
+    /** Optional: Provide additional headers for the upstream request */
+    protected open fun getAdditionalHeaders(id: K): Map<String, String> = emptyMap()
+
     // ─── Server State ──────────────────────────────────────────────────
 
     private var server: EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine.Configuration>? = null
@@ -131,8 +134,24 @@ abstract class CloudStreamProxy<K : Any>(
                 val createdServer = createServer(freePort)
                 createdServer.start(wait = false)
                 server = createdServer
-                actualPort = freePort
-                Timber.d("$proxyTag started on port $actualPort")
+                // CIO server starts asynchronously — wait until it's actually accepting
+                // connections before setting actualPort so isReady() only returns true when reachable.
+                var ready = false
+                for (attempt in 1..40) {
+                    try {
+                        java.net.Socket("127.0.0.1", freePort).use { ready = true }
+                        break
+                    } catch (_: Exception) {
+                        delay(50)
+                    }
+                }
+                if (ready) {
+                    actualPort = freePort
+                    Timber.d("$proxyTag started and verified on port $actualPort")
+                } else {
+                    actualPort = freePort // Fallback
+                    Timber.w("$proxyTag port $freePort not accepting connections after 2s, proceeding anyway")
+                }
             } catch (_: CancellationException) {
                 Timber.d("$proxyTag start cancelled")
             } catch (e: Exception) {
@@ -180,10 +199,12 @@ abstract class CloudStreamProxy<K : Any>(
                     }
 
                     try {
+                        android.util.Log.d("YouTubePlayback", "=== STEP 3: Proxy received request for ID: $id (Path: ${call.request.local.uri}) ===")
                         val rangeValidation = CloudStreamSecurity.validateRangeHeader(
                             call.request.headers["Range"]
                         )
                         if (!rangeValidation.isValid) {
+                            android.util.Log.w("YouTubePlayback", "Proxy Range validation failed for ID: $id")
                             call.respond(
                                 HttpStatusCode(416, "Range Not Satisfiable"),
                                 "Invalid range header"
@@ -193,15 +214,19 @@ abstract class CloudStreamProxy<K : Any>(
 
                         val streamUrl = getOrFetchStreamUrl(id)
                         if (streamUrl.isNullOrBlank()) {
+                            android.util.Log.e("YouTubePlayback", "=== PROXY ERROR: getOrFetchStreamUrl returned null/empty for $id! Responding HTTP 404 ===")
                             call.respond(HttpStatusCode.NotFound, "No stream URL available")
                             return@get
                         }
+                        android.util.Log.d("YouTubePlayback", "Proxy resolved stream URL for $id -> ${streamUrl.take(80)}...")
+
                         if (!CloudStreamSecurity.isSafeRemoteStreamUrl(
                                 url = streamUrl,
                                 allowedHostSuffixes = allowedHostSuffixes,
                                 allowHttpForAllowedHosts = true
                             )
                         ) {
+                            android.util.Log.e("YouTubePlayback", "=== PROXY ERROR: Security check rejected stream URL: $streamUrl ===")
                             call.respond(HttpStatusCode.BadGateway, "Rejected upstream stream URL")
                             return@get
                         }
@@ -210,13 +235,21 @@ abstract class CloudStreamProxy<K : Any>(
                         rangeValidation.normalizedHeader?.let {
                             requestBuilder.header("Range", it)
                         }
+                        
+                        // Add additional headers from subclass (e.g., specific User-Agent or Referer)
+                        getAdditionalHeaders(id).forEach { (name, value) ->
+                            requestBuilder.header(name, value)
+                        }
 
+                        android.util.Log.d("YouTubePlayback", "=== STEP 4: Proxy connecting upstream to YouTube media server ===")
                         val response = withContext(Dispatchers.IO) {
                             okHttpClient.newCall(requestBuilder.build()).execute()
                         }
 
                         response.use { upstream ->
+                            android.util.Log.d("YouTubePlayback", "Upstream YouTube response code: ${upstream.code}, Content-Type: ${upstream.header("Content-Type")}, Content-Length: ${upstream.header("Content-Length")}")
                             if (upstream.code != 200 && upstream.code != 206) {
+                                android.util.Log.e("YouTubePlayback", "=== PROXY ERROR: Upstream YouTube server returned HTTP ${upstream.code} ===")
                                 call.respond(
                                     CloudStreamSecurity.mapUpstreamStatusToProxyStatus(upstream.code),
                                     "Upstream stream request failed"
@@ -228,6 +261,7 @@ abstract class CloudStreamProxy<K : Any>(
                             val contentTypeHeader = upstream.header("Content-Type")
 
                             if (!CloudStreamSecurity.isSupportedAudioContentType(contentTypeHeader)) {
+                                android.util.Log.e("YouTubePlayback", "=== PROXY ERROR: Unsupported Content-Type: $contentTypeHeader ===")
                                 call.respond(
                                     HttpStatusCode.BadGateway,
                                     "Unsupported stream content type"

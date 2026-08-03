@@ -382,7 +382,8 @@ object AppModule {
         songRepository: SongRepository,
         favoritesDao: FavoritesDao,
         artistImageRepository: ArtistImageRepository,
-        folderTreeBuilder: FolderTreeBuilder
+        folderTreeBuilder: FolderTreeBuilder,
+        youtubeRepository: Lazy<com.theveloper.pixelplay.data.youtube.YouTubeMusicRepository>
     ): MusicRepository {
         return MusicRepositoryImpl(
             context = context,
@@ -397,7 +398,8 @@ object AppModule {
             songRepository = songRepository,
             favoritesDao = favoritesDao,
             artistImageRepository = artistImageRepository,
-            folderTreeBuilder = folderTreeBuilder
+            folderTreeBuilder = folderTreeBuilder,
+            youtubeRepositoryProvider = youtubeRepository
         )
 
     }
@@ -461,13 +463,14 @@ object AppModule {
             .readTimeout(8, java.util.concurrent.TimeUnit.SECONDS)
             .writeTimeout(8, java.util.concurrent.TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
-            // Add User-Agent header (required by some APIs)
+            // Add User-Agent header (required by some APIs) if not already set
             .addInterceptor { chain ->
                 val originalRequest = chain.request()
-                val requestWithUserAgent = originalRequest.newBuilder()
-                    .header("User-Agent", "PixelPlayer/1.0 (Android; Music Player)")
-                    .build()
-                chain.proceed(requestWithUserAgent)
+                val requestBuilder = originalRequest.newBuilder()
+                if (originalRequest.header("User-Agent").isNullOrBlank()) {
+                    requestBuilder.header("User-Agent", "PixelPlayer/1.0 (Android; Music Player)")
+                }
+                chain.proceed(requestBuilder.build())
             }
             .addInterceptor(loggingInterceptor)
             .build()
@@ -517,14 +520,17 @@ object AppModule {
             .writeTimeout(8, java.util.concurrent.TimeUnit.SECONDS)
             // Enable built-in retry on connection failure
             .retryOnConnectionFailure(true)
-            // Add headers
+            // Add headers if not already set
             .addInterceptor { chain ->
                 val originalRequest = chain.request()
-                val requestWithHeaders = originalRequest.newBuilder()
-                    .header("User-Agent", "PixelPlayer/1.0 (Android; Music Player)")
-                    .header("Accept", "application/json")
-                    .build()
-                chain.proceed(requestWithHeaders)
+                val requestBuilder = originalRequest.newBuilder()
+                if (originalRequest.header("User-Agent").isNullOrBlank()) {
+                    requestBuilder.header("User-Agent", "PixelPlayer/1.0 (Android; Music Player)")
+                }
+                if (originalRequest.header("Accept").isNullOrBlank()) {
+                    requestBuilder.header("Accept", "application/json")
+                }
+                chain.proceed(requestBuilder.build())
             }
             .addInterceptor(loggingInterceptor)
             .build()

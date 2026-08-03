@@ -98,8 +98,10 @@ fun AccountsScreen(
     onOpenQqMusicDashboard: () -> Unit = {},
     onOpenNavidromeDashboard: () -> Unit = {},
     onOpenJellyfinDashboard: () -> Unit = {},
+    onOpenYouTubeDashboard: () -> Unit = {},
     viewModel: AccountsViewModel = hiltViewModel()
 ) {
+
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -213,6 +215,7 @@ fun AccountsScreen(
                                 onOpenQqMusicDashboard = onOpenQqMusicDashboard,
                                 onOpenNavidromeDashboard = onOpenNavidromeDashboard,
                                 onOpenJellyfinDashboard = onOpenJellyfinDashboard,
+                                onOpenYouTubeDashboard = onOpenYouTubeDashboard,
                                 preferNeteaseDashboard = true
                             )
                         },
@@ -242,6 +245,7 @@ fun AccountsScreen(
                                 onOpenQqMusicDashboard = onOpenQqMusicDashboard,
                                 onOpenNavidromeDashboard = onOpenNavidromeDashboard,
                                 onOpenJellyfinDashboard = onOpenJellyfinDashboard,
+                                onOpenYouTubeDashboard = onOpenYouTubeDashboard,
                                 preferNeteaseDashboard = false
                             )
                         }
@@ -563,7 +567,9 @@ private fun EmptyAccountsCard(
                     ExternalServiceAccount.GOOGLE_DRIVE -> painterResource(R.drawable.rounded_drive_export_24)
                     ExternalServiceAccount.JELLYFIN -> painterResource(R.drawable.ic_jellyfin)
                     ExternalServiceAccount.NAVIDROME -> painterResource(R.drawable.ic_navidrome_md3)
+                    ExternalServiceAccount.YOUTUBE -> null
                 }
+
                 FilledTonalButton(
                     onClick = { if (!isComingSoon) onConnect(service) },
                     enabled = !isComingSoon,
@@ -574,12 +580,21 @@ private fun EmptyAccountsCard(
                     ),
                     modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
                 ) {
-                    Icon(
-                        painter = painter,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
+                    if (painter != null) {
+                        Icon(
+                            painter = painter,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = accountIcon(service),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                     Spacer(modifier = Modifier.size(8.dp))
+
                     TightWrapText(
                         text = if (isComingSoon) {
                             serviceSoonTemplate.format(serviceDisplayName(service))
@@ -655,6 +670,14 @@ private fun servicePalette(service: ExternalServiceAccount): ServicePalette {
             primaryActionContainer = Color(0xFFE3F2FD),
             primaryActionTint = Color(0xFF1565C0)
         )
+        ExternalServiceAccount.YOUTUBE -> ServicePalette(
+            iconContainer = Color(0xFFFF0000),
+            iconTint = Color.White,
+            statusContainer = Color(0xFFFFEBEE),
+            statusTint = Color(0xFFC62828),
+            primaryActionContainer = Color(0xFFFFEBEE),
+            primaryActionTint = Color(0xFFC62828)
+        )
     }
 }
 
@@ -666,8 +689,10 @@ private fun accountIcon(service: ExternalServiceAccount): ImageVector {
         ExternalServiceAccount.QQ_MUSIC -> Icons.Rounded.MusicNote
         ExternalServiceAccount.NAVIDROME -> Icons.Rounded.CloudQueue
         ExternalServiceAccount.JELLYFIN -> Icons.Rounded.CloudQueue
+        ExternalServiceAccount.YOUTUBE -> Icons.Rounded.MusicNote
     }
 }
+
 
 @Composable
 private fun ServiceIcon(service: ExternalServiceAccount, tint: Color, modifier: Modifier = Modifier) {
@@ -721,8 +746,10 @@ private fun serviceDisplayName(service: ExternalServiceAccount): String {
         ExternalServiceAccount.QQ_MUSIC -> stringResource(R.string.auth_qq_title)
         ExternalServiceAccount.NAVIDROME -> stringResource(R.string.auth_subsonic_title)
         ExternalServiceAccount.JELLYFIN -> stringResource(R.string.auth_jellyfin_title)
+        ExternalServiceAccount.YOUTUBE -> "YouTube Music"
     }
 }
+
 
 private fun openService(
     context: Context,
@@ -731,6 +758,7 @@ private fun openService(
     onOpenQqMusicDashboard: () -> Unit,
     onOpenNavidromeDashboard: () -> Unit,
     onOpenJellyfinDashboard: () -> Unit,
+    onOpenYouTubeDashboard: () -> Unit,
     preferNeteaseDashboard: Boolean
 ) {
     when (service) {
@@ -783,8 +811,12 @@ private fun openService(
                 )
             }
         }
+        ExternalServiceAccount.YOUTUBE -> {
+            onOpenYouTubeDashboard()
+        }
     }
 }
+
 
 private fun safeStartActivity(
     context: Context,

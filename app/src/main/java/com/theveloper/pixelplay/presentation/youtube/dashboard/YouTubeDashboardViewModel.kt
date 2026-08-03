@@ -1,0 +1,80 @@
+package com.theveloper.pixelplay.presentation.youtube.dashboard
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.theveloper.pixelplay.data.model.Song
+import com.theveloper.pixelplay.data.youtube.YouTubeMusicRepository
+import com.theveloper.pixelplay.presentation.viewmodel.PlayerViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import timber.log.Timber
+import javax.inject.Inject
+
+data class YouTubeDashboardUiState(
+    val searchQuery: String = "",
+    val isSearching: Boolean = false,
+    val searchResults: List<Song> = emptyList(),
+    val isSyncing: Boolean = false,
+    val errorMessage: String? = null
+)
+
+@HiltViewModel
+class YouTubeDashboardViewModel @Inject constructor(
+    private val repository: YouTubeMusicRepository
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(YouTubeDashboardUiState())
+    val uiState: StateFlow<YouTubeDashboardUiState> = _uiState.asStateFlow()
+
+    fun onSearchQueryChanged(query: String) {
+        _uiState.value = _uiState.value.copy(searchQuery = query)
+    }
+
+    fun search() {
+        val query = _uiState.value.searchQuery.trim()
+        if (query.isEmpty()) return
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isSearching = true, errorMessage = null)
+            try {
+                val results = repository.searchSongs(query)
+                _uiState.value = _uiState.value.copy(
+                    isSearching = false,
+                    searchResults = results
+                )
+            } catch (e: Exception) {
+                Timber.e(e, "YouTube search failed")
+                _uiState.value = _uiState.value.copy(
+                    isSearching = false,
+                    errorMessage = e.localizedMessage ?: "Search failed"
+                )
+            }
+        }
+    }
+
+    fun playTrack(song: Song, playerViewModel: PlayerViewModel) {
+        viewModelScope.launch {
+            repository.saveSongsToLibrary(listOf(song))
+            playerViewModel.playSong(song)
+        }
+    }
+
+    fun saveAllToLibrary() {
+        val results = _uiState.value.searchResults
+        if (results.isEmpty()) return
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isSyncing = true)
+            try {
+                repository.saveSongsToLibrary(results)
+                _uiState.value = _uiState.value.copy(isSyncing = false)
+            } catch (e: Exception) {
+                Timber.e(e, "Failed to save YouTube tracks to library")
+                _uiState.value = _uiState.value.copy(isSyncing = false, errorMessage = e.localizedMessage)
+            }
+        }
+    }
+}

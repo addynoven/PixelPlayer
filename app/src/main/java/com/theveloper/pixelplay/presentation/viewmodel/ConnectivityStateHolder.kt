@@ -87,6 +87,25 @@ class ConnectivityStateHolder @Inject constructor(
         _offlinePlaybackBlocked.tryEmit(Unit)
     }
 
+    fun checkIsOnlineNow(): Boolean {
+        val activeNet = connectivityManager.activeNetwork
+        if (activeNet == null) {
+            // Check legacy all networks as fallback
+            return connectivityManager.allNetworks.any { net ->
+                val caps = connectivityManager.getNetworkCapabilities(net)
+                caps?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true ||
+                        caps?.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_RESTRICTED) == true
+            }
+        }
+        val caps = connectivityManager.getNetworkCapabilities(activeNet)
+        val online = caps == null || caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ||
+                caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_RESTRICTED)
+        if (online != _isOnline.value) {
+            _isOnline.value = online
+        }
+        return online
+    }
+
     /**
      * Manually refresh local connection info (e.g. WiFi SSID).
      */
@@ -135,8 +154,7 @@ class ConnectivityStateHolder @Inject constructor(
             updateWifiInfo()
         }
         
-        _isOnline.value = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true &&
-                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+        _isOnline.value = checkIsOnlineNow()
 
         updateBluetoothEnabledState()
 
@@ -146,14 +164,15 @@ class ConnectivityStateHolder @Inject constructor(
             private val availableNetworks = mutableSetOf<Network>()
 
             override fun onAvailable(network: Network) {
-                // Network is available, but waiting for capability check
+                availableNetworks.add(network)
+                checkConnectivity()
             }
 
             override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
-                val hasInternet = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                val isValidated = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+                val hasInternet = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ||
+                        networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_RESTRICTED)
                 
-                if (hasInternet && isValidated) {
+                if (hasInternet) {
                     availableNetworks.add(network)
                 } else {
                     availableNetworks.remove(network)
@@ -178,7 +197,7 @@ class ConnectivityStateHolder @Inject constructor(
             }
             
             private fun checkConnectivity() {
-                _isOnline.value = availableNetworks.isNotEmpty()
+                _isOnline.value = availableNetworks.isNotEmpty() || checkIsOnlineNow()
             }
         }
         

@@ -83,6 +83,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
+import androidx.appcompat.content.res.AppCompatResources
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -128,44 +130,16 @@ private data class Contributor(
 )
 
 private val CoreMaintainer = Contributor(
-    id = "theovilardo",
-    displayName = "Theo Vilardo",
+    id = "neon",
+    displayName = "neon",
     role = "Creator and maintainer",
-    detail = "Building PixelPlayer with direct community feedback.",
-    avatarUrl = "https://avatars.githubusercontent.com/u/26845343?v=4",
+    detail = "Building and maintaining NeonPlayer.",
+    avatarUrl = "https://github.com/neon.png",
     iconRes = R.drawable.round_developer_board_24,
-    githubUrl = "https://github.com/theovilardo",
+    githubUrl = "https://github.com/neon",
 )
 
-private val PinnedCommunityMembers = listOf(
-    Contributor(
-        id = "lostf1sh",
-        displayName = "@lostf1sh",
-        role = "Most active contributor",
-        detail = "Has contributed enormously across core features, architecture and reliability.",
-        badge = "Top Impact",
-        iconRes = R.drawable.rounded_celebration_24,
-        githubUrl = "https://github.com/lostf1sh",
-    ),
-    Contributor(
-        id = "cromaguy",
-        displayName = "@cromaguy",
-        role = "Rhythm developer",
-        detail = "Developer of Rhythm (another music app) and key community supporter.",
-        badge = "Community Ally",
-        iconRes = R.drawable.round_developer_board_24,
-        githubUrl = "https://github.com/cromaguy",
-    ),
-    Contributor(
-        id = "colbycabrera",
-        displayName = "@ColbyCabrera",
-        role = "Early contributor",
-        detail = "Helped shape PixelPlayer in the first stages of the app.",
-        badge = "Early Support",
-        iconRes = R.drawable.round_newspaper_24,
-        githubUrl = "https://github.com/ColbyCabrera",
-    ),
-)
+private val PinnedCommunityMembers = emptyList<Contributor>()
 
 private val PinnedAliases = mapOf(
     "cromaguy" to setOf("chroma"),
@@ -593,11 +567,13 @@ private fun AboutHeroCard(
                         shape = CircleShape,
                         color = MaterialTheme.colorScheme.primaryContainer,
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.pixelplay_base_monochrome),
+                        val appIcon = AppCompatResources.getDrawable(LocalContext.current, R.mipmap.ic_launcher_round)
+                        Image(
+                            painter = rememberDrawablePainter(appIcon),
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier.padding(10.dp).size(28.dp),
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(CircleShape),
                         )
                     }
 

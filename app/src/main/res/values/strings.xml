@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">PixelPlayer</string>
+    <string name="app_name">NeonPlayer</string>
     <string name="app_tagline">Music Player</string>
-    <string name="app_name_change_title">App Name Change</string>
-    <string name="app_name_change_message">We have changed our app\'s name from PixelPlay to PixelPlayer due to a trademark-related issue. Keep playing!</string>
+    <string name="app_name_change_title">App Rebranded</string>
+    <string name="app_name_change_message">Welcome to NeonPlayer! Your modern online &amp; offline music player.</string>
     <string name="app_name_change_do_not_show_again">Do not show again</string>
 
     <!-- Navigation Bar Labels -->
@@ -13,7 +13,7 @@
 
     <!-- All files access dialog-->
     <string name="all_files_access_title">Special Permission Required</string>
-    <string name="all_files_access_description">To edit song metadata (.mp3 files), PixelPlayer needs special access to all files. This allows us to modify track tags directly. Please grant this permission on the next screen to enable metadata editing.</string>
+    <string name="all_files_access_description">To edit song metadata (.mp3 files), NeonPlayer needs special access to all files. This allows us to modify track tags directly. Please grant this permission on the next screen to enable metadata editing.</string>
     <string name="grant_permission_button">Grant Permission</string>
 
     <!-- External Player -->
@@ -32,14 +32,14 @@
     <string name="playstore_dialog_action_open">Open Play Store</string>
     <string name="playstore_dialog_action_continue_beta">Continue beta</string>
     <string name="playstore_dialog_link_pending">The Play Store link will be enabled from GitHub config.</string>
-    <string name="playstore_dialog_title">PixelPlayer is now available on Google Play</string>
+    <string name="playstore_dialog_title">NeonPlayer is now available on Google Play</string>
     <string name="playstore_dialog_body">Use the stable channel on Google Play for release updates while we keep beta builds active.</string>
-    <string name="playstore_dialog_app_name">PixelPlayer</string>
+    <string name="playstore_dialog_app_name">NeonPlayer</string>
     <string name="playstore_dialog_release_announcement">Release announcement</string>
     <string name="playstore_dialog_coming_soon">Coming soon</string>
 
     <!-- Brick breaker -->
-    <string name="easter_egg_thank_you">Thank you for using PixelPlayer!</string>
+    <string name="easter_egg_thank_you">Thank you for using NeonPlayer!</string>
     <string name="brick_high">HIGH %1$d</string>
     <string name="brick_cd_close">Close</string>
     <string name="brick_stat_score">SCORE</string>
@@ -125,4 +125,72 @@
     <string name="common_play_album">Play album</string>
     <string name="common_shuffle_play_album">Shuffle play album</string>
     <string name="common_album_art_for_title">Album art for %1$s</string>
+
+    <!-- Legacy compatibility string defaults to resolve AAPT translation mismatch warnings -->
+    <string name="song_field_artist">Artist</string>
+    <string name="song_field_composer">Composer</string>
+    <string name="song_field_disc_number">Disc Number</string>
+    <string name="song_field_genre">Genre</string>
+    <string name="song_field_replaygain_album_db">Album ReplayGain</string>
+    <string name="song_field_replaygain_track_db">Track ReplayGain</string>
+    <string name="song_field_title">Title</string>
+    <string name="song_field_track_number">Track Number</string>
+    <string name="song_info_choose_tone">Choose Sound</string>
+    <string name="song_info_label_duration">Duration</string>
+    <string name="song_info_label_song_metadata">Song Metadata</string>
+    <string name="song_info_set_as_short">Set as Sound</string>
+    <string name="song_info_set_ringtone">Set as Ringtone</string>
+    <string name="song_info_tab_details">Details</string>
+    <string name="sync_complete">Sync Complete</string>
+    <string name="sync_files_progress">Syncing files...</string>
+    <string name="sync_in_progress">Sync in progress</string>
+    <string name="sync_indicator_rebuilding">Rebuilding...</string>
+    <string name="sync_pending">Sync Pending</string>
+    <string name="sync_processing">Processing...</string>
+    <string name="sync_scanning">Scanning...</string>
+    <string name="sync_status_syncing_ellipsis">Syncing...</string>
+    <string name="syncing_library">Syncing Library</string>
+    <string name="tab_albums">Albums</string>
+    <string name="tab_artists">Artists</string>
+    <string name="tab_home">Home</string>
+    <string name="tab_library">Library</string>
+    <string name="tab_songs">Songs</string>
+    <string name="toast_added_to_queue">Added to queue</string>
+    <string name="toast_battery_already_disabled">Battery optimization disabled</string>
+    <string name="toast_battery_settings_unavailable">Battery settings unavailable</string>
+    <string name="toast_crash_log_copied">Crash log copied</string>
+    <string name="toast_daily_mix_regeneration_started">Daily Mix regeneration started</string>
+    <string name="toast_full_rescan_started">Full rescan started</string>
+    <string name="toast_grant_all_permissions">Grant all permissions</string>
+    <string name="toast_grant_permission_first">Grant permission first</string>
+    <string name="toast_grant_storage_first">Grant storage permission first</string>
+    <string name="toast_library_sync_finished">Library sync finished</string>
+    <string name="toast_playing_next">Playing next</string>
+    <string name="toast_playlist_created">Playlist created</string>
+    <string name="toast_rebuilding_database">Rebuilding database</string>
+    <string name="toast_regenerated_palettes_all">Palettes regenerated</string>
+    <string name="toast_regenerated_palettes_partial">Palettes partially regenerated</string>
+    <string name="toast_set_ai_provider_api_key_first">Set AI API key first</string>
+    <string name="toast_set_gemini_api_key_first">Set Gemini API key first</string>
+    <string name="toast_stats_regeneration_started">Stats regeneration started</string>
+    <string name="toast_welcome_user">Welcome!</string>
+    <string name="ui_format_percent_d">%1$d%%</string>
+    <string name="unknown_album">Unknown album</string>
+    <string name="unknown_artist">Unknown artist</string>
+    <string name="unknown_song_title">Unknown title</string>
+    <string name="unknown_version">Unknown version</string>
+    <string name="watch_transfer_cancelled">Transfer cancelled</string>
+    <string name="watch_transfer_complete">Transfer complete</string>
+    <string name="watch_transfer_failed">Transfer failed</string>
+    <string name="watch_transfer_multiple_active">Multiple active transfers</string>
+    <string name="watch_transfer_preparing">Preparing transfer</string>
+    <string name="watch_transfer_preparing_transfer">Preparing transfer...</string>
+    <string name="watch_transfer_sending_n_to_watch">Sending %1$d to watch</string>
+    <string name="watch_transfer_sending_to_watch">Sending to watch</string>
+    <string name="watch_transfer_starting">Starting transfer...</string>
+    <string name="watch_transfer_starting_short">Starting...</string>
+    <string name="word_delimiter_hint">Enter word delimiters</string>
+    <string name="word_delimiter_section_subtitle">Configure word delimiters</string>
+    <string name="word_delimiter_section_title">Word Delimiters</string>
+    <string name="working_ellipsis">Working...</string>
 </resources>
