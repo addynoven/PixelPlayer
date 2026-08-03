@@ -1,196 +1,100 @@
 # NeonPlayer 🎵
 
 <p align="center">
-  <img src="assets/icon.png" alt="App Icon" width="128"/>
-</p>
-<p align="center">
-  <strong>A beautiful, feature-rich online & offline music player for Android</strong><br>
-  Built with Jetpack Compose and Material Design 3. Seamlessly play your local files and stream from YouTube, Telegram, and more.
+  <img src="app/src/main/res/drawable/ic_splash_logo.png" alt="NeonPlayer Logo" width="128"/>
 </p>
 
 <p align="center">
-  <img src="assets/screenshot1.jpg" alt="Screenshot 1" width="200" style="border-radius:26px;"/>
-  <img src="assets/screenshot2.jpg" alt="Screenshot 2" width="200" style="border-radius:26px;"/>
-  <img src="assets/screenshot3.jpg" alt="Screenshot 3" width="200" style="border-radius:26px;"/>
-  <img src="assets/screenshot4.jpg" alt="Screenshot 4" width="200" style="border-radius:26px;"/>
+  <strong>A modern, high-performance Online & Offline Music Player for Android</strong><br>
+  Originally forked from PixelPlayer, now evolved into a powerful online music player with native YouTube integration.
 </p>
 
 <p align="center">
-    <a href="https://github.com/neon/NeonPlayer/releases/latest">
-        <img src="https://img.shields.io/github/v/release/neon/NeonPlayer?include_prereleases&logo=github&style=for-the-badge&label=Latest%20Release" alt="Latest Release">
-    </a>
-    <a href="https://github.com/neon/NeonPlayer/releases">
-        <img src="https://img.shields.io/github/downloads/neon/NeonPlayer/total?logo=github&style=for-the-badge" alt="Total Downloads">
-    </a>
-    <img src="https://img.shields.io/badge/Android-11%2B-green?style=for-the-badge&logo=android" alt="Android 11+">
-    <img src="https://img.shields.io/badge/Kotlin-100%25-purple?style=for-the-badge&logo=kotlin" alt="Kotlin">
+  <a href="https://github.com/addynoven/PixelPlayer/releases/latest">
+    <img src="https://img.shields.io/github/v/release/addynoven/PixelPlayer?include_prereleases&logo=github&style=for-the-badge&label=Release" alt="Latest Release">
+  </a>
+  <a href="https://github.com/addynoven/PixelPlayer/releases">
+    <img src="https://img.shields.io/github/downloads/addynoven/PixelPlayer/total?logo=github&style=for-the-badge" alt="Total Downloads">
+  </a>
+  <img src="https://img.shields.io/badge/Android-11%2B-green?style=for-the-badge&logo=android" alt="Android 11+">
+  <img src="https://img.shields.io/badge/Kotlin-100%25-purple?style=for-the-badge&logo=kotlin" alt="Kotlin">
 </p>
 
 ---
 
-## ‼️ DISCLAIMER
-- No fork of this project will recieve support, if you use a fork, ask the forker to support you.
+## 📖 The Origin Story & Project Truth
+
+**NeonPlayer** originated as a fork of [PixelPlayer](https://github.com/PixelPlayerHQ/PixelPlayer) (originally designed as a local offline music player). 
+
+We transformed it from a purely offline player into a full-featured **Online & Offline Music Ecosystem**. We added direct **YouTube & YouTube Music** streaming engines, smart connectivity handling, multi-source resolution, and custom UI/branding updates.
+
+NeonPlayer is actively maintained and evolved by **neon** ([@addynoven](https://github.com/addynoven)).
 
 ---
 
 ## ✨ Features
 
+### 🎧 YouTube & Cloud Streaming
+- **Native YouTube Music Engine** - Direct audio stream resolution via optimized InnerTube payloads (`ANDROID_SDKLESS`, `IOS`, `TVHTML5`).
+- **High-Quality Audio** - Streams high-bitrate WebM/Opus audio with pre-flight HTTP verification checks.
+- **Online & Offline Hybrid** - Seamlessly switch between local storage and cloud streaming sources.
+- **Telegram & Cloud Drive Integration** - Stream audio directly from connected cloud services.
+
 ### 🎨 Modern UI/UX
-- **Material You** - Dynamic color theming that adapts to your wallpaper
-- **Smooth Animations** - Fluid transitions and micro-interactions
-- **Customizable UI** - Adjustable corner radius and navigation bar settings
-- **Dark/Light Theme** - Automatic or manual theme switching
-- **Album Art Colors** - Dynamic color extraction from album artwork
+- **Material You Design** - Dynamic colors that adapt to system theme and album artwork.
+- **Smooth Jetpack Compose UI** - Fluid animations, micro-interactions, and custom player controls.
+- **Padded Adaptive Icons & Splash Screen** - Clean, rounded, non-cropped branding UI.
 
-### 🎵 Powerful Playback
-- **Media3 ExoPlayer** - Industry-leading audio engine with FFmpeg support
-- **Background Playback** - Full media session integration
-- **Queue Management** - Drag-and-drop reordering
-- **Shuffle & Repeat** - All playback modes supported
-- **Gapless Playback** - Seamless transitions between tracks
-- **Custom Transitions** - Configure crossfades between songs
+### 🎵 Audio & Playback Features
+- **Media3 ExoPlayer** - Industry-leading audio engine with FFmpeg integration.
+- **Synchronized Lyrics** - Embedded and online LRC lyrics via LRCLIB.
+- **Daily Mix & AI Playlists** - Automated recommendations based on listening history.
+- **Custom Equalizer & Audio Effects** - Built-in multi-band audio controls.
 
-### 📚 Library Management
-- **Multi-format Support** - MP3, FLAC, AAC, OGG, WAV, and more
-- **Browse By** - Songs, Albums, Artists, Genres, Folders
-- **Smart Artist Parsing** - Configurable delimiters for multi-artist tracks
-- **Album Artist Grouping** - Proper album organization
-- **Folder Filtering** - Choose which directories to scan
+---
 
-### 🔍 Discovery & Organization
-- **Full-text Search** - Search across your entire library
-- **Daily Mix** - AI-powered personalized playlist based on listening habits
-- **Playlists** - Create and manage custom playlists
-- **Statistics** - Track your listening history and habits
+## ⬇️ Downloads & Releases
 
-### 🎤 Lyrics
-- **Synchronized Lyrics** - LRC format via LRCLIB API
-- **Lyrics Editing** - Modify or add lyrics to your tracks
-- **Scrolling Display** - Follow along as you listen
+Get the latest compiled APKs directly from GitHub Releases:
 
-### 🖼️ Artist Artwork
-- **Deezer Integration** - Automatic artist images from Deezer API
-- **Smart Caching** - Memory (LRU) + database caching for offline access
-- **Fallback Icons** - Beautiful placeholders when images unavailable
+<p align="center">
+  <a href="https://github.com/addynoven/PixelPlayer/releases/latest">
+    <img src="https://raw.githubusercontent.com/Kunzisoft/Github-badge/main/get-it-on-github.png" alt="Get it on GitHub" height="60">
+  </a>
+</p>
 
-### 📲 Connectivity
-- **Chromecast** - Stream to your TV or smart speakers
-- **Android Auto** - Full Android Auto support for in-car playback (Soon)
-- **Widgets** - Home screen control with Glance widgets
-
-### ⚙️ Advanced Features
-- **Tag Editor** - Edit metadata with TagLib (MP3, FLAC, M4A support)
-- **AI Playlists** - Generate playlists with AI (Supports Gemini, Deepseek, OpenAI, etc.)
+### Download Options:
+- **`app-arm64-v8a-debug.apk`** — For modern 64-bit Android devices (recommended)
+- **`app-armeabi-v7a-debug.apk`** — For legacy 32-bit ARM Android devices
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| **Language** | [Kotlin](https://kotlinlang.org/) 100% |
-| **UI Framework** | [Jetpack Compose](https://developer.android.com/jetpack/compose) |
-| **Design System** | [Material Design 3](https://m3.material.io/) |
-| **Audio Engine** | [Media3 ExoPlayer](https://developer.android.com/guide/topics/media/media3) + FFmpeg |
-| **Architecture** | MVVM with StateFlow/SharedFlow |
-| **DI** | [Hilt](https://dagger.dev/hilt/) |
-| **Database** | [Room](https://developer.android.com/training/data-storage/room) |
-| **Networking** | [Retrofit](https://square.github.io/retrofit/) + OkHttp |
-| **Image Loading** | [Coil](https://coil-kt.github.io/coil/) |
-| **Async** | Kotlin Coroutines & Flow |
-| **Background Tasks** | WorkManager |
-| **Metadata** | [TagLib](https://github.com/nicholaus/taglib-android) |
-| **Widgets** | [Glance](https://developer.android.com/jetpack/compose/glance) |
-
----
-
-## 📱 Requirements
-
-- **Android 11** (API 30) or higher
-- **6GB RAM** recommended for smooth performance
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Android Studio Ladybug | 2024.2.1 or newer
-- Android SDK 29+
-- JDK 11+
-
-### Installation
-
-1. **Clone the repository**
-   ```sh
-   git clone https://github.com/neon/NeonPlayer.git
-   ```
-
-2. **Open in Android Studio**
-   - Open Android Studio
-   - Select "Open an Existing Project"
-   - Navigate to the cloned directory
-
-3. **Sync and Build**
-   - Wait for Gradle to sync dependencies
-   - Build the project (Build → Make Project)
-
-4. **Run**
-   - Connect a device or start an emulator
-   - Click Run (▶️)
-
----
-
-## ⬇️ Download
-
-<p align="center">
-  <a href="https://github.com/neon/NeonPlayer/releases/latest">
-    <img src="https://raw.githubusercontent.com/Kunzisoft/Github-badge/main/get-it-on-github.png" alt="Get it on GitHub" height="60">
-  </a>
-</p>
-
----
-
-## 📂 Project Structure
-
-```
-app/src/main/java/com/theveloper/pixelplay/
-├── data/
-│   ├── database/       # Room entities, DAOs, migrations
-│   ├── model/          # Domain models (Song, Album, Artist, etc.)
-│   ├── network/        # API services (LRCLIB, Deezer, YouTube)
-│   ├── preferences/    # DataStore preferences
-│   ├── repository/     # Data repositories
-│   ├── service/        # MusicService, HTTP server
-│   └── worker/         # WorkManager sync workers
-├── di/                 # Hilt dependency injection modules
-├── presentation/
-│   ├── components/     # Reusable Compose components
-│   ├── navigation/     # Navigation graph
-│   ├── screens/        # Screen composables
-│   └── viewmodel/      # ViewModels
-├── ui/
-│   ├── glancewidget/   # Home screen widgets
-│   └── theme/          # Colors, typography, theming
-└── utils/              # Extensions and utilities
-```
+| Component | Technology |
+|---|---|
+| **Language** | [Kotlin](https://kotlinlang.org/) (100%) |
+| **UI Framework** | [Jetpack Compose](https://developer.android.com/jetpack/compose) & Material Design 3 |
+| **Audio Engine** | [Media3 ExoPlayer](https://developer.android.com/guide/topics/media/media3) |
+| **Online Source** | YouTube InnerTube Client, OkHttp, Retrofit |
+| **Architecture** | Feature-driven Modular MVVM with Hilt |
+| **Local Storage** | Room Database & DataStore Preferences |
 
 ---
 
 ## 🤝 Maintainer
 
-**NeonPlayer** is maintained and developed by **neon**.
+**NeonPlayer** is maintained and developed by **neon** ([@addynoven](https://github.com/addynoven)).
 
 ---
 
-## 📄 License
+## 📄 License & Attribution
 
-This project is licensed under a Proprietary License - see the [LICENSE](LICENSE) file for details.
-
-Portions contributed before 2026-05-12 remain available under the MIT License; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+- **NeonPlayer Modifications**: Maintained by **neon**.
+- **Original Base Code**: Forked from PixelPlayer. Portions created prior to May 2026 remain available under the MIT License; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for full details.
 
 ---
 
 <p align="center">
-  Made with ❤️ by <a href="https://github.com/neon">neon</a>
+  Made with ❤️ by <a href="https://github.com/addynoven">neon</a>
 </p>
