@@ -10,14 +10,14 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/addynoven/PixelPlayer/releases/tag/v1.0.0-online">
-    <img src="https://img.shields.io/github/v/release/addynoven/PixelPlayer?include_prereleases&logo=github&style=for-the-badge&label=Latest%20Release&color=blue" alt="Latest Release">
+  <a href="https://github.com/addynoven/PixelPlayer/releases/latest">
+    <img src="https://img.shields.io/github/v/release/addynoven/PixelPlayer?include_prereleases&style=for-the-badge&logo=github&color=blue&label=Latest%20Release" alt="Latest Release">
   </a>
   <a href="https://github.com/addynoven/PixelPlayer/releases">
-    <img src="https://img.shields.io/github/downloads/addynoven/PixelPlayer/total?style=for-the-badge&logo=github&color=brightgreen" alt="Total Downloads">
+    <img src="https://img.shields.io/github/downloads/addynoven/PixelPlayer/total?style=for-the-badge&logo=github&color=brightgreen&label=Total%20Downloads" alt="Total Downloads">
   </a>
   <img src="https://img.shields.io/badge/Android-11%2B-green?style=for-the-badge&logo=android" alt="Android 11+">
-  <img src="https://img.shields.io/badge/Kotlin-100%25-purple?style=for-the-badge&logo=kotlin" alt="Kotlin">
+  <img src="https://img.shields.io/github/languages/top/addynoven/PixelPlayer?style=for-the-badge&logo=kotlin&color=purple" alt="Kotlin">
 </p>
 
 ---
@@ -55,17 +55,18 @@ NeonPlayer is actively maintained and evolved by **neon** ([@addynoven](https://
 
 ## ⬇️ Downloads & Releases
 
-Get the official **v1.0.0-online** APK binaries directly from GitHub Releases:
+Get the latest compiled APK binaries directly from [**GitHub Latest Releases**](https://github.com/addynoven/PixelPlayer/releases/latest):
 
 <p align="center">
-  <a href="https://github.com/addynoven/PixelPlayer/releases/tag/v1.0.0-online">
+  <a href="https://github.com/addynoven/PixelPlayer/releases/latest">
     <img src="https://raw.githubusercontent.com/Kunzisoft/Github-badge/main/get-it-on-github.png" alt="Get it on GitHub" height="60">
   </a>
 </p>
 
 ### Download Options:
-- [**`app-arm64-v8a-debug.apk`**](https://github.com/addynoven/PixelPlayer/releases/download/v1.0.0-online/app-arm64-v8a-debug.apk) — For modern 64-bit Android devices (recommended)
-- [**`app-armeabi-v7a-debug.apk`**](https://github.com/addynoven/PixelPlayer/releases/download/v1.0.0-online/app-armeabi-v7a-debug.apk) — For legacy 32-bit ARM Android devices
+Download compiled APK assets on the [**Latest Release Page**](https://github.com/addynoven/PixelPlayer/releases/latest):
+- **`app-arm64-v8a-debug.apk`** — For modern 64-bit Android devices (recommended)
+- **`app-armeabi-v7a-debug.apk`** — For legacy 32-bit ARM Android devices
 
 ---
 
