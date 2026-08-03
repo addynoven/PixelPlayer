@@ -1,7 +1,7 @@
 # NeonPlayer 🎵
 
 <p align="center">
-  <img src="app/src/main/res/drawable/ic_splash_logo.png" alt="NeonPlayer Logo" width="128"/>
+  <img src="assets/icon.png" alt="NeonPlayer Icon" width="140"/>
 </p>
 
 <p align="center">
@@ -10,21 +10,25 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/addynoven/PixelPlayer/releases/latest">
-    <img src="https://img.shields.io/github/v/release/addynoven/PixelPlayer?include_prereleases&logo=github&style=for-the-badge&label=Release" alt="Latest Release">
+  <a href="https://github.com/addynoven/PixelPlayer/releases">
+    <img src="https://img.shields.io/badge/Latest%20Release-v1.0.0--online-blue?style=for-the-badge&logo=github" alt="Latest Release">
   </a>
   <a href="https://github.com/addynoven/PixelPlayer/releases">
-    <img src="https://img.shields.io/github/downloads/addynoven/PixelPlayer/total?logo=github&style=for-the-badge" alt="Total Downloads">
+    <img src="https://img.shields.io/github/downloads/addynoven/PixelPlayer/total?style=for-the-badge&logo=github&color=brightgreen" alt="Total Downloads">
   </a>
   <img src="https://img.shields.io/badge/Android-11%2B-green?style=for-the-badge&logo=android" alt="Android 11+">
   <img src="https://img.shields.io/badge/Kotlin-100%25-purple?style=for-the-badge&logo=kotlin" alt="Kotlin">
+</p>
+
+<p align="center">
+  <img src="assets/icon.png" alt="NeonPlayer Showcase" width="220" style="border-radius:26px;"/>
 </p>
 
 ---
 
 ## 📖 The Origin Story & Project Truth
 
-**NeonPlayer** originated as a fork of [PixelPlayer](https://github.com/PixelPlayerHQ/PixelPlayer) (originally designed as a local offline music player). 
+**NeonPlayer** originated as a fork of [PixelPlayer](https://github.com/PixelPlayerHQ/PixelPlayer) (originally created as a local offline music player). 
 
 We transformed it from a purely offline player into a full-featured **Online & Offline Music Ecosystem**. We added direct **YouTube & YouTube Music** streaming engines, smart connectivity handling, multi-source resolution, and custom UI/branding updates.
 
@@ -58,7 +62,7 @@ NeonPlayer is actively maintained and evolved by **neon** ([@addynoven](https://
 Get the latest compiled APKs directly from GitHub Releases:
 
 <p align="center">
-  <a href="https://github.com/addynoven/PixelPlayer/releases/latest">
+  <a href="https://github.com/addynoven/PixelPlayer/releases">
     <img src="https://raw.githubusercontent.com/Kunzisoft/Github-badge/main/get-it-on-github.png" alt="Get it on GitHub" height="60">
   </a>
 </p>
