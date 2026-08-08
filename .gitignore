@@ -51,3 +51,6 @@ markdown.xml
 !**/.env.example
 
 sdk/
+
+target/
+.venv/
